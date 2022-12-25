@@ -1,0 +1,35 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-app
+spec:
+  selector:
+    matchLabels:
+      app: flask-app
+  template:
+    metadata:
+      labels:
+        app: flask-app
+    spec:
+      containers:
+      - image: 349384651398.dkr.ecr.eu-central-1.amazonaws.com/lemi1:latest
+        name: flask-app
+        ports:
+          - containerPort: 5000
+        imagePullPolicy: IfNotPresent
+      nodeSelector:
+            kubernetes.io/os: linux
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-app
+spec:
+  type: LoadBalancer
+  selector:
+    app: flask-app
+  ports:
+    - port: 443
+      targetPort: 5000
